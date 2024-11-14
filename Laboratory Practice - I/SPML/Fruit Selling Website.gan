@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Fruit Website" company="XYZ" webLink="http://" view-date="2025-02-03" view-index="0" gantt-divider-location="319" resource-divider-location="300" version="3.3.3312" locale="en_GB">
+    <description/>
+    <view zooming-state="default:6" id="gantt-chart">
+        <field id="tpd3" name="Name" width="181" order="0"/>
+        <field id="tpd4" name="Begin date" width="67" order="1"/>
+        <field id="tpd5" name="End date" width="70" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="taskLabelUp" value="name"/>
+        <option id="taskLabelLeft" value=""/>
+        <option id="taskLabelRight" value=""/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+        <option id="color.recent"><![CDATA[#3399ff #f6b564 #e3a9a9 #96b3bf #f977bf #ad9ee7 #e6f665 #ff00ff #00ff00 #33ffff]]></option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="210" order="0"/>
+        <field id="1" name="Default role" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="a5b217ca7232481fa428f4fa040d5ab8" name="Fruit Slling Website" color="#000000" meeting="false" start="2025-02-03" duration="40" complete="76" expand="true">
+            <task id="1" uid="8d1589721dd543b39580576ffb587992" name="Project Scope &amp; Objectives" color="#ff0033" meeting="false" start="2025-02-03" duration="3" complete="100" expand="true">
+                <depend id="2" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="2" uid="ceb843fc10f44911a04a9e7c01a6cd2e" name="Research &amp; Planning" color="#33ffff" meeting="false" start="2025-02-06" duration="5" complete="95" expand="true">
+                <depend id="3" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="3" uid="5ecea835495544848ac77ac9db71e4bd" name="Design Phase" color="#00ff00" meeting="false" start="2025-02-13" duration="5" complete="90" expand="true">
+                <depend id="4" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="4" uid="29412b37063147acbab771bfee2c4976" name="Development Phase" color="#ff00ff" meeting="false" start="2025-02-20" duration="10" complete="95" expand="true">
+                <depend id="5" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="5" uid="3145e018752c4020bf4e4792fc638070" name="Implement E-commerce Functionality" color="#e6f665" meeting="false" start="2025-03-06" duration="5" complete="85" expand="true">
+                <depend id="6" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="6" uid="28a1d62eaf204b19aaf7bf588bd55ae9" name="Testing Phase" color="#ad9ee7" meeting="false" start="2025-03-13" duration="2" complete="85" expand="true">
+                <depend id="7" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="7" uid="b7d6076d65db499cba0236d0223f361d" name="Launch the Website" color="#f977bf" meeting="false" start="2025-03-17" duration="1" complete="0" expand="true">
+                <depend id="8" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="8" uid="65a25ab56cc940d0ae2e14661591fece" name="Marketing and Promotion" color="#96b3bf" meeting="false" start="2025-03-18" duration="3" complete="95" expand="true">
+                <depend id="9" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="9" uid="88da2787dcf34c188e4f2cfd1785077e" name="Monitor and Improve" color="#e3a9a9" meeting="false" start="2025-03-21" duration="3" complete="0" expand="true">
+                <depend id="10" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="10" uid="2df90811657e4440990b36e181465405" name="Scale the Business" color="#f6b564" meeting="false" start="2025-03-26" duration="3" complete="0" expand="true"/>
+        </task>
+    </tasks>
+    <resources>
+        <resource id="3" name="Pratik M" function="Default:1" contacts="abc@gmail.com" phone="1234567980">
+            <rate name="standard" value="10"/>
+        </resource>
+        <resource id="4" name="Rahul B" function="2" contacts="def@gmail.com" phone="4567891230">
+            <rate name="standard" value="10"/>
+        </resource>
+        <resource id="5" name="Ankita W" function="4" contacts="ghi@gmail.com" phone="7894561230">
+            <rate name="standard" value="10"/>
+        </resource>
+        <resource id="6" name="Mandar B" function="3" contacts="jkl@gmail.com" phone="3579514628">
+            <rate name="standard" value="10"/>
+        </resource>
+        <resource id="7" name="Prasad K" function="5" contacts="mno@gmail.com" phone="3654789120">
+            <rate name="standard" value="10"/>
+        </resource>
+        <resource id="8" name="Rohan J" function="6" contacts="der@gmail.com" phone="6584971230">
+            <rate name="standard" value="10"/>
+        </resource>
+    </resources>
+    <allocations>
+        <allocation task-id="0" resource-id="3" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="3" resource-id="4" function="2" responsible="false" load="100.0"/>
+        <allocation task-id="1" resource-id="4" function="2" responsible="false" load="100.0"/>
+        <allocation task-id="2" resource-id="4" function="2" responsible="false" load="100.0"/>
+        <allocation task-id="4" resource-id="5" function="4" responsible="false" load="100.0"/>
+        <allocation task-id="5" resource-id="5" function="4" responsible="false" load="100.0"/>
+        <allocation task-id="6" resource-id="6" function="3" responsible="false" load="100.0"/>
+        <allocation task-id="7" resource-id="6" function="3" responsible="false" load="100.0"/>
+        <allocation task-id="9" resource-id="7" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="8" resource-id="7" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="10" resource-id="8" function="6" responsible="false" load="100.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+    <roles>
+        <role id="1" name="Project Manager"/>
+        <role id="2" name="Designer"/>
+        <role id="3" name="Tester &amp; deployer"/>
+        <role id="4" name="Developer"/>
+        <role id="5" name="Sales Analyst"/>
+        <role id="6" name="Marketing"/>
+        <role id="7" name="Maintaince"/>
+    </roles>
+</project>

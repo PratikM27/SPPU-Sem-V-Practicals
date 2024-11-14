@@ -1,0 +1,186 @@
+/*
+Chit No:16	     			          	 DBMS LAB
+Problem Statement
+Design at least 10 SQL queries for suitable database application using SQL DML statements: Insert, Select, Update, Delete with operators, functions, and set operator.
+*/
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 29
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| chit2              |
+| chit3              |
+| chit8              |
+| demo               |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+12 rows in set (0.00 sec)
+
+mysql> create database chit16;
+Query OK, 1 row affected (0.18 sec)
+
+mysql> use chitt16;
+ERROR 1049 (42000): Unknown database 'chitt16'
+mysql> use chit16;
+Database changed
+mysql> create table customer(cust_id int(3) primary key,cust_name varchar(15),address varchar(15),city varchar(10),postalcode int(10),country varchar(15));
+Query OK, 0 rows affected, 2 warnings (0.65 sec)
+
+mysql> delete from customer column address;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column address' at line 1
+mysql> drop from customer column address;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from customer column address' at line 1
+mysql> alter table customer drop column address;
+Query OK, 0 rows affected (0.31 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc customer;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| cust_id    | int         | NO   | PRI | NULL    |       |
+| cust_name  | varchar(15) | YES  |     | NULL    |       |
+| city       | varchar(10) | YES  |     | NULL    |       |
+| postalcode | int         | YES  |     | NULL    |       |
+| country    | varchar(15) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into customer values(1,'Pratik','Pune',411052,'India'),(2,'Ishpret','Mexico',84596,'USA'),(3,'Saheli','Mumbai',411002,'India'),(4,'Soham','Pune',411052,'India');
+Query OK, 4 rows affected (0.12 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into customer values(5,'Raj','Mumbai',411002,'India'),(6,'Om','London',49784,'UK');
+Query OK, 2 rows affected (0.06 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++---------+-----------+--------+------------+---------+
+| cust_id | cust_name | city   | postalcode | country |
++---------+-----------+--------+------------+---------+
+|       1 | Pratik    | Pune   |     411052 | India   |
+|       2 | Ishpret   | Mexico |      84596 | USA     |
+|       3 | Saheli    | Mumbai |     411002 | India   |
+|       4 | Soham     | Pune   |     411052 | India   |
+|       5 | Raj       | Mumbai |     411002 | India   |
+|       6 | Om        | London |      49784 | UK      |
++---------+-----------+--------+------------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select * from customer where city='Pune' AND country='India';
++---------+-----------+------+------------+---------+
+| cust_id | cust_name | city | postalcode | country |
++---------+-----------+------+------------+---------+
+|       1 | Pratik    | Pune |     411052 | India   |
+|       4 | Soham     | Pune |     411052 | India   |
++---------+-----------+------+------------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from customer where city='Lodon' OR country='USA';
++---------+-----------+--------+------------+---------+
+| cust_id | cust_name | city   | postalcode | country |
++---------+-----------+--------+------------+---------+
+|       2 | Ishpret   | Mexico |      84596 | USA     |
++---------+-----------+--------+------------+---------+
+1 row in set (0.00 sec)
+
+mysql> select * from customer where city='London' OR country='USA';
++---------+-----------+--------+------------+---------+
+| cust_id | cust_name | city   | postalcode | country |
++---------+-----------+--------+------------+---------+
+|       2 | Ishpret   | Mexico |      84596 | USA     |
+|       6 | Om        | London |      49784 | UK      |
++---------+-----------+--------+------------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from customer where NOT country='India';
++---------+-----------+--------+------------+---------+
+| cust_id | cust_name | city   | postalcode | country |
++---------+-----------+--------+------------+---------+
+|       2 | Ishpret   | Mexico |      84596 | USA     |
+|       6 | Om        | London |      49784 | UK      |
++---------+-----------+--------+------------+---------+
+2 rows in set (0.01 sec)
+
+mysql> create table book(book_id int(5) primary key,booknm varchar(15));
+Query OK, 0 rows affected, 1 warning (0.32 sec)
+
+mysql> insert into book(1,'ABC'),(2,'DEF'),(3,'GHI'),(4,'JKL'),(5,'MNO'),(6,'PQR');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1,'ABC'),(2,'DEF'),(3,'GHI'),(4,'JKL'),(5,'MNO'),(6,'PQR')' at line 1
+mysql> insert into book values(1,'ABC'),(2,'DEF'),(3,'GHI'),(4,'JKL'),(5,'MNO'),(6,'PQR');
+Query OK, 6 rows affected (0.11 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from book;
++---------+--------+
+| book_id | booknm |
++---------+--------+
+|       1 | ABC    |
+|       2 | DEF    |
+|       3 | GHI    |
+|       4 | JKL    |
+|       5 | MNO    |
+|       6 | PQR    |
++---------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select cust_name,city from customer join book on customer.cust_id=book.book_id;
++-----------+--------+
+| cust_name | city   |
++-----------+--------+
+| Pratik    | Pune   |
+| Ishpret   | Mexico |
+| Saheli    | Mumbai |
+| Soham     | Pune   |
+| Raj       | Mumbai |
+| Om        | London |
++-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from customer UNION select * from book;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> select cust_name,city from customer UNION select booknm from book;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> select cust_name from customer UNION select booknm from book;
++-----------+
+| cust_name |
++-----------+
+| Pratik    |
+| Ishpret   |
+| Saheli    |
+| Soham     |
+| Raj       |
+| Om        |
+| ABC       |
+| DEF       |
+| GHI       |
+| JKL       |
+| MNO       |
+| PQR       |
++-----------+
+12 rows in set (0.00 sec)
+
+mysql> 
+
+

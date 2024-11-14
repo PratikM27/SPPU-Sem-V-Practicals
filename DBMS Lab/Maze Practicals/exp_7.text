@@ -1,0 +1,221 @@
+/*
+Chit No:12	     			          	 DBMS LAB
+Problem Statement
+Database Trigger (All Types: Row level and Statement level triggers, before and After Triggers). Write a database trigger on Library table. The System should keep track of the records that are being updated or deleted. The old value of updated or deleted records should be added in Library_Audit table. 
+*/
+
+/*
+Trigeer = any event occur e.g. delete occur on main table then automatically trigeer fire & whatever data is delete is stored into backup table  
+*/
+
+
+delimiter #
+
+create trigger LibraryUpdateTrigger
+before update on Library for each row
+begin
+declare Operation varchar(15);
+set Operation = "Updated";
+insert into Library_Audit values (old.BookID, old.BookTitle, old.BookAuthor, old.BookEdition, old.NumberOfCopies, curdate(), Operation);
+end #
+
+create trigger LibraryDeleteTrigger
+before delete on Library for each row
+begin
+declare Operation varchar(15);
+set Operation = "Deleted";
+insert into Library_Audit values (old.BookID, old.BookTitle, old.BookAuthor, old.BookEdition, old.NumberOfCopies, curdate(), Operation);
+end #
+
+
+-------------------------------------------------------
+
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 33
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| chit10             |
+| chit12             |
+| chit16             |
+| chit2              |
+| chit3              |
+| chit8              |
+| demo               |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+15 rows in set (0.01 sec)
+
+mysql> use chit12;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++------------------+
+| Tables_in_chit12 |
++------------------+
+| Library          |
+| Library_Audit    |
++------------------+
+2 rows in set (0.00 sec)
+
+mysql> desc Library;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| BookID         | int         | NO   | PRI | NULL    |       |
+| BookTitle      | varchar(45) | NO   |     | NULL    |       |
+| BookAuthor     | varchar(25) | NO   |     | NULL    |       |
+| BookEdition    | int         | YES  |     | NULL    |       |
+| NumberOfCopies | int         | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> desc Library_Audit;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| BookID         | int         | NO   |     | NULL    |       |
+| BookTitle      | varchar(45) | NO   |     | NULL    |       |
+| BookAuthor     | varchar(25) | NO   |     | NULL    |       |
+| BookEdition    | int         | YES  |     | NULL    |       |
+| NumberOfCopies | int         | YES  |     | NULL    |       |
+| DateModified   | date        | YES  |     | NULL    |       |
+| Operation      | varchar(15) | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * form Library;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'form Library' at line 1
+mysql> select * from Library;
++--------+-----------+----------------------+-------------+----------------+
+| BookID | BookTitle | BookAuthor           | BookEdition | NumberOfCopies |
++--------+-----------+----------------------+-------------+----------------+
+|      1 | DBMS      | Henry Korth          |           1 |           1000 |
+|      2 | CNS       | Behrouz Forouzan     |           2 |            500 |
+|      3 | TOC       | Vikas Kumar          |           1 |            200 |
+|      4 | SPOS      | Abraham Silberschatz |           2 |            300 |
++--------+-----------+----------------------+-------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> delimiter #
+mysql> 
+mysql> create trigger LibraryUpdateTrigger
+    -> before update on Library for each row
+    -> begin
+    -> declare Operation varchar(15);
+    -> set Operation = "Updated";
+    -> insert into Library_Audit values (old.BookID, old.BookTitle, old.BookAuthor, old.BookEdition, old.NumberOfCopies, curdate(), Operation);
+    -> end #
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> 
+mysql> create trigger LibraryDeleteTrigger
+    -> before delete on Library for each row
+    -> begin
+    -> declare Operation varchar(15);
+    -> set Operation = "Deleted";
+    -> insert into Library_Audit values (old.BookID, old.BookTitle, old.BookAuthor, old.BookEdition, old.NumberOfCopies, curdate(), Operation);
+    -> end #
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> delimiter ;
+mysql> update Library set BookEdition=6 where BookID=1;
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Library;
++--------+-----------+----------------------+-------------+----------------+
+| BookID | BookTitle | BookAuthor           | BookEdition | NumberOfCopies |
++--------+-----------+----------------------+-------------+----------------+
+|      1 | DBMS      | Henry Korth          |           6 |           1000 |
+|      2 | CNS       | Behrouz Forouzan     |           2 |            500 |
+|      3 | TOC       | Vikas Kumar          |           1 |            200 |
+|      4 | SPOS      | Abraham Silberschatz |           2 |            300 |
++--------+-----------+----------------------+-------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Library_Audit;
++--------+-----------+-------------+-------------+----------------+--------------+-----------+
+| BookID | BookTitle | BookAuthor  | BookEdition | NumberOfCopies | DateModified | Operation |
++--------+-----------+-------------+-------------+----------------+--------------+-----------+
+|      1 | DBMS      | Henry Korth |           1 |           1000 | 2024-11-11   | Updated   |
++--------+-----------+-------------+-------------+----------------+--------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> update Library set BookAuthor=XYZ where BookTitle=CNS;
+ERROR 1054 (42S22): Unknown column 'CNS' in 'where clause'
+mysql> update Library set BookAuthor=XYZ where BookTitle='CNS';
+ERROR 1054 (42S22): Unknown column 'XYZ' in 'field list'
+mysql> update Library set BookAuthor='XYZ' where BookTitle='CNS';
+Query OK, 1 row affected (0.12 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Library;
++--------+-----------+----------------------+-------------+----------------+
+| BookID | BookTitle | BookAuthor           | BookEdition | NumberOfCopies |
++--------+-----------+----------------------+-------------+----------------+
+|      1 | DBMS      | Henry Korth          |           6 |           1000 |
+|      2 | CNS       | XYZ                  |           2 |            500 |
+|      3 | TOC       | Vikas Kumar          |           1 |            200 |
+|      4 | SPOS      | Abraham Silberschatz |           2 |            300 |
++--------+-----------+----------------------+-------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Library_Audit;
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+| BookID | BookTitle | BookAuthor       | BookEdition | NumberOfCopies | DateModified | Operation |
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+|      1 | DBMS      | Henry Korth      |           1 |           1000 | 2024-11-11   | Updated   |
+|      2 | CNS       | Behrouz Forouzan |           2 |            500 | 2024-11-11   | Updated   |
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> delete from Library where BookID=2;
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from Library;
++--------+-----------+----------------------+-------------+----------------+
+| BookID | BookTitle | BookAuthor           | BookEdition | NumberOfCopies |
++--------+-----------+----------------------+-------------+----------------+
+|      1 | DBMS      | Henry Korth          |           6 |           1000 |
+|      3 | TOC       | Vikas Kumar          |           1 |            200 |
+|      4 | SPOS      | Abraham Silberschatz |           2 |            300 |
++--------+-----------+----------------------+-------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from Library_Audit;
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+| BookID | BookTitle | BookAuthor       | BookEdition | NumberOfCopies | DateModified | Operation |
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+|      1 | DBMS      | Henry Korth      |           1 |           1000 | 2024-11-11   | Updated   |
+|      2 | CNS       | Behrouz Forouzan |           2 |            500 | 2024-11-11   | Updated   |
+|      2 | CNS       | XYZ              |           2 |            500 | 2024-11-11   | Deleted   |
++--------+-----------+------------------+-------------+----------------+--------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> 
+
+

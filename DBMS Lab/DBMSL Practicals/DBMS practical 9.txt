@@ -1,0 +1,216 @@
+> use DBMS_exp9
+switched to db DBMS_exp9
+> db.createCollection('Student')
+{ "ok" : 1 }
+> db.Student.insertOne({StuRoll : 45, StuName : 'AAA', StuMarks: 69, StuBranch: 'Computer'})
+{
+	"acknowledged" : true,
+	"insertedId" : ObjectId("66ff9b92be2b0b7438b4c5f5")
+}
+> db.Student.findOne().pretty()
+2024-10-04T13:09:12.394+0530 E QUERY    [thread1] TypeError: db.Student.findOne(...).pretty is not a function :
+@(shell):1:1
+> db.Student.findOne().pretty()
+2024-10-04T13:09:15.761+0530 E QUERY    [thread1] TypeError: db.Student.findOne(...).pretty is not a function :
+@(shell):1:1
+> db.Student.findOne()
+{
+	"_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"),
+	"StuRoll" : 45,
+	"StuName" : "AAA",
+	"StuMarks" : 69,
+	"StuBranch" : "Computer"
+}
+> db.Student.insertMany([{StuRoll : 23, StuName : 'BBB', StuMarks: 75, StuBranch: 'FirstYear'}, {StuRoll: 64, StuName: 'CCC', StuMarks: 80, StuBranch: 'IT'}, {StuRoll: 80, StuName: 'DDD', StuMarks: 70, StuBranch: 'Computer'}, {StuRoll: 69, StuName: 'EEE', StuMarks: 100, StuBranch: 'AI'}])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("66ff9bfebe2b0b7438b4c5f6"),
+		ObjectId("66ff9bfebe2b0b7438b4c5f7"),
+		ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+		ObjectId("66ff9bfebe2b0b7438b4c5f9")
+	]
+}
+> db.Student.find().pretty()
+{
+	"_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"),
+	"StuRoll" : 45,
+	"StuName" : "AAA",
+	"StuMarks" : 69,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f6"),
+	"StuRoll" : 23,
+	"StuName" : "BBB",
+	"StuMarks" : 75,
+	"StuBranch" : "FirstYear"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f7"),
+	"StuRoll" : 64,
+	"StuName" : "CCC",
+	"StuMarks" : 80,
+	"StuBranch" : "IT"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+	"StuRoll" : 80,
+	"StuName" : "DDD",
+	"StuMarks" : 70,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f9"),
+	"StuRoll" : 69,
+	"StuName" : "EEE",
+	"StuMarks" : 100,
+	"StuBranch" : "AI"
+}
+> db.Student.find({StuMarks: {$eq: 69}})
+{ "_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"), "StuRoll" : 45, "StuName" : "AAA", "StuMarks" : 69, "StuBranch" : "Computer" }
+> db.Student.find({},{_id: 0, StuRoll: 1, StuName: 1}).pretty()
+{ "StuRoll" : 45, "StuName" : "AAA" }
+{ "StuRoll" : 23, "StuName" : "BBB" }
+{ "StuRoll" : 64, "StuName" : "CCC" }
+{ "StuRoll" : 80, "StuName" : "DDD" }
+{ "StuRoll" : 69, "StuName" : "EEE" }
+> db.Student.find({StuMarks: {$gte: 70}},{_id: 0, StuRoll: 1, StuName: 1})
+{ "StuRoll" : 23, "StuName" : "BBB" }
+{ "StuRoll" : 64, "StuName" : "CCC" }
+{ "StuRoll" : 80, "StuName" : "DDD" }
+{ "StuRoll" : 69, "StuName" : "EEE" }
+> db.Student.find({$and:[{StuRoll: 80},{StuBranch: 'Computer'}]}).pretty()
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+	"StuRoll" : 80,
+	"StuName" : "DDD",
+	"StuMarks" : 70,
+	"StuBranch" : "Computer"
+}
+> db.Student.find({$or:[{StuBranch: 'IT'},{StuBranch: 'Computer'}]}).pretty()
+{
+	"_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"),
+	"StuRoll" : 45,
+	"StuName" : "AAA",
+	"StuMarks" : 69,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f7"),
+	"StuRoll" : 64,
+	"StuName" : "CCC",
+	"StuMarks" : 80,
+	"StuBranch" : "IT"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+	"StuRoll" : 80,
+	"StuName" : "DDD",
+	"StuMarks" : 70,
+	"StuBranch" : "Computer"
+}
+> db.Student.find({StuBranch: {$in:['Computer', 'IT', 'AI']}}).pretty()
+{
+	"_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"),
+	"StuRoll" : 45,
+	"StuName" : "AAA",
+	"StuMarks" : 69,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f7"),
+	"StuRoll" : 64,
+	"StuName" : "CCC",
+	"StuMarks" : 80,
+	"StuBranch" : "IT"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+	"StuRoll" : 80,
+	"StuName" : "DDD",
+	"StuMarks" : 70,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f9"),
+	"StuRoll" : 69,
+	"StuName" : "EEE",
+	"StuMarks" : 100,
+	"StuBranch" : "AI"
+}
+> db.Student.updateOne({StuRoll: 23}, {$set: {StuMarks: 90}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.Student.updateOne({StuRoll: 59}, {$set: {StuRoll: 59, StuName: 'ABC', StuMarks: 80, StuBranch: 'IT'}}, {upsert:true})
+{
+	"acknowledged" : true,
+	"matchedCount" : 0,
+	"modifiedCount" : 0,
+	"upsertedId" : ObjectId("66ff9ca6e8b02558cb9981ec")
+}
+> db.Student.renameCollection('StudentData')
+{ "ok" : 1 }
+> { ok: 1 }
+1
+> db.StudentData.find()
+{ "_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"), "StuRoll" : 45, "StuName" : "AAA", "StuMarks" : 69, "StuBranch" : "Computer" }
+{ "_id" : ObjectId("66ff9bfebe2b0b7438b4c5f6"), "StuRoll" : 23, "StuName" : "BBB", "StuMarks" : 90, "StuBranch" : "FirstYear" }
+{ "_id" : ObjectId("66ff9bfebe2b0b7438b4c5f7"), "StuRoll" : 64, "StuName" : "CCC", "StuMarks" : 80, "StuBranch" : "IT" }
+{ "_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"), "StuRoll" : 80, "StuName" : "DDD", "StuMarks" : 70, "StuBranch" : "Computer" }
+{ "_id" : ObjectId("66ff9bfebe2b0b7438b4c5f9"), "StuRoll" : 69, "StuName" : "EEE", "StuMarks" : 100, "StuBranch" : "AI" }
+{ "_id" : ObjectId("66ff9ca6e8b02558cb9981ec"), "StuRoll" : 59, "StuBranch" : "IT", "StuMarks" : 80, "StuName" : "ABC" }
+> db.StudentData.find().pretty()
+{
+	"_id" : ObjectId("66ff9b92be2b0b7438b4c5f5"),
+	"StuRoll" : 45,
+	"StuName" : "AAA",
+	"StuMarks" : 69,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f6"),
+	"StuRoll" : 23,
+	"StuName" : "BBB",
+	"StuMarks" : 90,
+	"StuBranch" : "FirstYear"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f7"),
+	"StuRoll" : 64,
+	"StuName" : "CCC",
+	"StuMarks" : 80,
+	"StuBranch" : "IT"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f8"),
+	"StuRoll" : 80,
+	"StuName" : "DDD",
+	"StuMarks" : 70,
+	"StuBranch" : "Computer"
+}
+{
+	"_id" : ObjectId("66ff9bfebe2b0b7438b4c5f9"),
+	"StuRoll" : 69,
+	"StuName" : "EEE",
+	"StuMarks" : 100,
+	"StuBranch" : "AI"
+}
+{
+	"_id" : ObjectId("66ff9ca6e8b02558cb9981ec"),
+	"StuRoll" : 59,
+	"StuBranch" : "IT",
+	"StuMarks" : 80,
+	"StuName" : "ABC"
+}
+> db.Student.deleteOne({StuRoll: 80})
+{ "acknowledged" : true, "deletedCount" : 0 }
+> db.Student.find().pretty()
+> db.Student.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 0 }
+>  db.Student.drop()
+false
+>  db.Student.drop()
+false
+> 
+
+

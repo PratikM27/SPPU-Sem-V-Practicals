@@ -1,0 +1,149 @@
+> use DBMS_exp10
+switched to db DBMS_exp10
+> db.createCollection('Orders')
+{
+	"ok" : 0,
+	"errmsg" : "a collection 'DBMS_exp10.Orders' already exists",
+	"code" : 48,
+	"codeName" : "NamespaceExists"
+}
+> db.Orders.find().pretty()
+{
+	"_id" : ObjectId("66ff97fb9e2ef76694c7aae9"),
+	"cust_id" : "A123",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaea"),
+	"cust_id" : "A123",
+	"product" : "P2",
+	"price" : 430,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaeb"),
+	"cust_id" : "A123",
+	"product" : "P3",
+	"price" : 400,
+	"status" : "D"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaec"),
+	"cust_id" : "B212",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaed"),
+	"cust_id" : "B212",
+	"product" : "P4",
+	"price" : 500,
+	"status" : "D"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaee"),
+	"cust_id" : "C212",
+	"product" : "P2",
+	"price" : 400,
+	"status" : "A"
+}
+> db.Orders.aggregate([{$count:"Total No of Documents"}]).pretty()
+{ "Total No of Documents" : 6 }
+> db.Orders.aggregate([{$match:{status:"A"}}]).pretty()
+{
+	"_id" : ObjectId("66ff97fb9e2ef76694c7aae9"),
+	"cust_id" : "A123",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaea"),
+	"cust_id" : "A123",
+	"product" : "P2",
+	"price" : 430,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaec"),
+	"cust_id" : "B212",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaee"),
+	"cust_id" : "C212",
+	"product" : "P2",
+	"price" : 400,
+	"status" : "A"
+}
+> db.Orders.aggregate([{$project:{_id:0, product:1, price:1}}]).pretty()
+{ "product" : "P1", "price" : 540 }
+{ "product" : "P2", "price" : 430 }
+{ "product" : "P3", "price" : 400 }
+{ "product" : "P1", "price" : 540 }
+{ "product" : "P4", "price" : 500 }
+{ "product" : "P2", "price" : 400 }
+> db.Orders.aggregate([{$sort:{price:1}}]).pretty()
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaeb"),
+	"cust_id" : "A123",
+	"product" : "P3",
+	"price" : 400,
+	"status" : "D"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaee"),
+	"cust_id" : "C212",
+	"product" : "P2",
+	"price" : 400,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaea"),
+	"cust_id" : "A123",
+	"product" : "P2",
+	"price" : 430,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaed"),
+	"cust_id" : "B212",
+	"product" : "P4",
+	"price" : 500,
+	"status" : "D"
+}
+{
+	"_id" : ObjectId("66ff97fb9e2ef76694c7aae9"),
+	"cust_id" : "A123",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+{
+	"_id" : ObjectId("66ff9a289e2ef76694c7aaec"),
+	"cust_id" : "B212",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+>  db.Orders.aggregate([{$match:{status:"A"}},{$project:{product:1,_id:0}}]).pretty()
+{ "product" : "P1" }
+{ "product" : "P2" }
+{ "product" : "P1" }
+{ "product" : "P2" }
+> db.Orders.aggregate([{$sort:{price:-1}},{$limit:1}]).pretty()
+{
+	"_id" : ObjectId("66ff97fb9e2ef76694c7aae9"),
+	"cust_id" : "A123",
+	"product" : "P1",
+	"price" : 540,
+	"status" : "A"
+}
+> 
+
+

@@ -1,0 +1,141 @@
+/*
+Chit No:10	     		          	 DBMS LAB
+Problem Statement
+Cursors: use  Cursor
+Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already exist in the second table then that data should be skipped. 
+*/
+
+/*
+cursor = 1st take table in temporary memory then execute query,and that area where active data can work called cursor
+*/
+
+delimiter #
+
+create procedure MergeCursor (in Roll_In int)
+begin
+declare exit_loop boolean;
+declare c1 cursor for select Rollno from O_RollCall where Rollno=Roll_In;
+declare continue handler for not found set exit_loop=TRUE;
+open c1;
+fetch c1 into Roll_In;
+if not exists(select * from N_RollCall where Rollno=Roll_In) then 
+insert into N_RollCall select * from O_RollCall where Rollno=Roll_In;
+end if;
+close c1;
+end #
+
+
+-----------------------------------------------
+
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 31
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| chit10             |
+| chit16             |
+| chit2              |
+| chit3              |
+| chit8              |
+| demo               |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+14 rows in set (0.00 sec)
+
+mysql> use chit10;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++------------------+
+| Tables_in_chit10 |
++------------------+
+| N_RollCall       |
+| O_RollCall       |
++------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from N_RollCall;
++--------+----------+---------+
+| Rollno | Name     | Address |
++--------+----------+---------+
+|      1 | Pratik   | Pune    |
+|      2 | Ishpreet | Mumbai  |
+|      3 | Ankita   | Mumbai  |
+|      4 | Tejas    | Pune    |
+|      5 | Rahul    | Mumbai  |
++--------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from O_RollCall;
++--------+----------+---------+
+| Rollno | Name     | Address |
++--------+----------+---------+
+|      1 | Pratik   | Pune    |
+|      2 | Ishpreet | Mumbai  |
+|      3 | Ankita   | Mumbai  |
++--------+----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> delimiter #
+mysql> 
+mysql> create procedure MergeCursor (in Roll_In int)
+    -> begin
+    -> declare exit_loop boolean;
+    -> declare c1 cursor for select Rollno from O_RollCall where Rollno=Roll_In;
+    -> declare continue handler for not found set exit_loop=TRUE;
+    -> open c1;
+    -> fetch c1 into Roll_In;
+    -> if not exists(select * from N_RollCall where Rollno=Roll_In) then 
+    -> insert into N_RollCall select * from O_RollCall where Rollno=Roll_In;
+    -> end if;
+    -> close c1;
+    -> end #
+ERROR 1304 (42000): PROCEDURE MergeCursor already exists
+mysql> delimiter ;
+mysql> call MergeCursor(3);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call MergeCursor(1);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call MergeCursor(2);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from N_RollCall;
++--------+----------+---------+
+| Rollno | Name     | Address |
++--------+----------+---------+
+|      1 | Pratik   | Pune    |
+|      2 | Ishpreet | Mumbai  |
+|      3 | Ankita   | Mumbai  |
+|      4 | Tejas    | Pune    |
+|      5 | Rahul    | Mumbai  |
++--------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> 
+
+

@@ -1,0 +1,145 @@
+/*
+Chit No: 2		     			          	 DBMS LAB
+Problem Statement: Design and Develop SQL DDL statements on Schema given.
+Schema:
+employee_master (first name,middle,last name,department,manager id.)
+branch_master (branch id ,branch name)
+a)Insert records in branch_master
+b)Insert records in employee_master.
+c)Create index on emp_name column of employee_master.
+d)Create a view containing employee details 
+*/
+
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| chit2              |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+9 rows in set (0.00 sec)
+
+mysql> use chit2;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table employee_master(first_name varchar(10),middle_name varchar(10),last_name varchar(10),department varchar(10),manager_id int(5));
+Query OK, 0 rows affected, 1 warning (0.53 sec)
+
+mysql> insert into employee_master values('Pratik','Vijay','Manjarekar','CS','101');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee_master values('Pratiksha','Vaibhav','Zujam','IT','102');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee_master values('Ankita','Pramod','Walawalkar','CIVIL','103');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee_master values('Ishpreet','Amol','Dang','ENTC','104');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> select * from employee_master;
++------------+-------------+------------+------------+------------+
+| first_name | middle_name | last_name  | department | manager_id |
++------------+-------------+------------+------------+------------+
+| Pratik     | Vijay       | Manjarekar | CS         |        101 |
+| Pratiksha  | Vaibhav     | Zujam      | IT         |        102 |
+| Ankita     | Pramod      | Walawalkar | CIVIL      |        103 |
+| Ishpreet   | Amol        | Dang       | ENTC       |        104 |
++------------+-------------+------------+------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> create table branch_master(branch_id int(5),branch_name varchar(10));
+Query OK, 0 rows affected, 1 warning (0.37 sec)
+
+mysql> insert into branch_master(1,'FE'),(2,'SE'),(3,'TE'),(4,'BE');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1,'FE'),(2,'SE'),(3,'TE'),(4,'BE')' at line 1
+mysql> insert into branch_master values(1,'FE'),(2,'SE'),(3,'TE'),(4,'BE');
+Query OK, 4 rows affected (0.08 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from branch_master;
++-----------+-------------+
+| branch_id | branch_name |
++-----------+-------------+
+|         1 | FE          |
+|         2 | SE          |
+|         3 | TE          |
+|         4 | BE          |
++-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> create index emp_name on employee_master(first_name,middle_name,last_name);
+Query OK, 0 rows affected (0.41 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create view emp as select * from employee_master;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> select * from emp;
++------------+-------------+------------+------------+------------+
+| first_name | middle_name | last_name  | department | manager_id |
++------------+-------------+------------+------------+------------+
+| Pratik     | Vijay       | Manjarekar | CS         |        101 |
+| Pratiksha  | Vaibhav     | Zujam      | IT         |        102 |
+| Ankita     | Pramod      | Walawalkar | CIVIL      |        103 |
+| Ishpreet   | Amol        | Dang       | ENTC       |        104 |
++------------+-------------+------------+------------+------------+
+4 rows in set (0.01 sec)
+
+mysql> drop view emp;
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> show index from employee_master;
++-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table           | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| employee_master |          1 | emp_name |            1 | first_name  | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| employee_master |          1 | emp_name |            2 | middle_name | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| employee_master |          1 | emp_name |            3 | last_name   | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+3 rows in set (0.16 sec)
+
+mysql> create view emp as select first_name,middle_name,last_name,emp from employee_master;
+
+ERROR 1054 (42S22): Unknown column 'emp' in 'field list'
+mysql> create view emp as select * from employee_master;
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> select * from emp;
++------------+-------------+------------+------------+------------+
+| first_name | middle_name | last_name  | department | manager_id |
++------------+-------------+------------+------------+------------+
+| Pratik     | Vijay       | Manjarekar | CS         |        101 |
+| Pratiksha  | Vaibhav     | Zujam      | IT         |        102 |
+| Ankita     | Pramod      | Walawalkar | CIVIL      |        103 |
+| Ishpreet   | Amol        | Dang       | ENTC       |        104 |
++------------+-------------+------------+------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
+

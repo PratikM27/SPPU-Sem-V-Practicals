@@ -1,0 +1,355 @@
+/*
+Chit No:14	     			          	 DBMS LAB
+Problem Statement
+Design at least 10 SQL queries for suitable database application using SQL DML statements: all types of Join, View.
+*/
+/*
+stu
+
+Rollno Name     Marks   Stu_id
+  1    Pratik   95      101
+  2    Ankita   96      102
+  3    Rahul    80      103
+  4    Ishpreet 92      104
+  5    Tejas    80      105  
+  
+dept
+
+Dept_id  Dept_name
+ 100      IT
+ 101      CS
+ 102      CIVIL
+ 103      ENTC
+ 104      CS 
+*/
+
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| exp_2              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> create database exp_3;
+Query OK, 1 row affected (0.22 sec)
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> use exp_3;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table stu(Rollno int(5) primary key,Name varchar(15),Marks float(2),Stu_id int(5) unique);
+Query OK, 0 rows affected, 2 warnings (0.73 sec)
+
+mysql> desc stu;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int         | NO   | PRI | NULL    |       |
+| Name   | varchar(15) | YES  |     | NULL    |       |
+| Marks  | float       | YES  |     | NULL    |       |
+| Stu_id | int         | YES  | UNI | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table stu modify Rollno int(5
+    -> ) auto_increment;
+Query OK, 0 rows affected, 1 warning (2.72 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> desc stu;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| Rollno | int         | NO   | PRI | NULL    | auto_increment |
+| Name   | varchar(15) | YES  |     | NULL    |                |
+| Marks  | float       | YES  |     | NULL    |                |
+| Stu_id | int         | YES  | UNI | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into stu values(1,'Pratik',95,101);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into stu(Name,Marks,Stu_id) values('Ankita',96,102),('Rahul',80,103),('Ishpreet',92,104),('Tejas',80,105);
+Query OK, 4 rows affected (0.08 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from stu;
++--------+----------+-------+--------+
+| Rollno | Name     | Marks | Stu_id |
++--------+----------+-------+--------+
+|      1 | Pratik   |    95 |    101 |
+|      2 | Ankita   |    96 |    102 |
+|      3 | Rahul    |    80 |    103 |
+|      4 | Ishpreet |    92 |    104 |
+|      5 | Tejas    |    80 |    105 |
++--------+----------+-------+--------+
+5 rows in set (0.00 sec)
+
+mysql> create table dept(Dept_id int(5) unique,Dept_name varchar(15));
+Query OK, 0 rows affected, 1 warning (0.64 sec)
+
+mysql> desc dept;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Dept_id   | int         | YES  | UNI | NULL    |       |
+| Dept_name | varchar(15) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into dept values(100,'IT'),(101,'CS'),(102,'CIVIL'),(103,'ENTC'),(104,'CS');
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from dept;
++---------+-----------+
+| Dept_id | Dept_name |
++---------+-----------+
+|     100 | IT        |
+|     101 | CS        |
+|     102 | CIVIL     |
+|     103 | ENTC      |
+|     104 | CS        |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu cross join dept;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      5 | Tejas    |    80 |    105 |     100 | IT        |
+|      4 | Ishpreet |    92 |    104 |     100 | IT        |
+|      3 | Rahul    |    80 |    103 |     100 | IT        |
+|      2 | Ankita   |    96 |    102 |     100 | IT        |
+|      1 | Pratik   |    95 |    101 |     100 | IT        |
+|      5 | Tejas    |    80 |    105 |     101 | CS        |
+|      4 | Ishpreet |    92 |    104 |     101 | CS        |
+|      3 | Rahul    |    80 |    103 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     101 | CS        |
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      5 | Tejas    |    80 |    105 |     102 | CIVIL     |
+|      4 | Ishpreet |    92 |    104 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     102 | CIVIL     |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      1 | Pratik   |    95 |    101 |     102 | CIVIL     |
+|      5 | Tejas    |    80 |    105 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     103 | ENTC      |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      2 | Ankita   |    96 |    102 |     103 | ENTC      |
+|      1 | Pratik   |    95 |    101 |     103 | ENTC      |
+|      5 | Tejas    |    80 |    105 |     104 | CS        |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
+|      3 | Rahul    |    80 |    103 |     104 | CS        |
+|      2 | Ankita   |    96 |    102 |     104 | CS        |
+|      1 | Pratik   |    95 |    101 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+25 rows in set (0.00 sec)
+
+mysql> select * from stu join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from stu inner join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from stu left join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
+|      5 | Tejas    |    80 |    105 |    NULL | NULL      |
++--------+----------+-------+--------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu left outer join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
+|      5 | Tejas    |    80 |    105 |    NULL | NULL      |
++--------+----------+-------+--------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu right join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|   NULL | NULL     |  NULL |   NULL |     100 | IT        |
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu right outer join dept on stu.Stu_id=dept.Dept_id;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|   NULL | NULL     |  NULL |   NULL |     100 | IT        |
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu join dept;
++--------+----------+-------+--------+---------+-----------+
+| Rollno | Name     | Marks | Stu_id | Dept_id | Dept_name |
++--------+----------+-------+--------+---------+-----------+
+|      5 | Tejas    |    80 |    105 |     100 | IT        |
+|      4 | Ishpreet |    92 |    104 |     100 | IT        |
+|      3 | Rahul    |    80 |    103 |     100 | IT        |
+|      2 | Ankita   |    96 |    102 |     100 | IT        |
+|      1 | Pratik   |    95 |    101 |     100 | IT        |
+|      5 | Tejas    |    80 |    105 |     101 | CS        |
+|      4 | Ishpreet |    92 |    104 |     101 | CS        |
+|      3 | Rahul    |    80 |    103 |     101 | CS        |
+|      2 | Ankita   |    96 |    102 |     101 | CS        |
+|      1 | Pratik   |    95 |    101 |     101 | CS        |
+|      5 | Tejas    |    80 |    105 |     102 | CIVIL     |
+|      4 | Ishpreet |    92 |    104 |     102 | CIVIL     |
+|      3 | Rahul    |    80 |    103 |     102 | CIVIL     |
+|      2 | Ankita   |    96 |    102 |     102 | CIVIL     |
+|      1 | Pratik   |    95 |    101 |     102 | CIVIL     |
+|      5 | Tejas    |    80 |    105 |     103 | ENTC      |
+|      4 | Ishpreet |    92 |    104 |     103 | ENTC      |
+|      3 | Rahul    |    80 |    103 |     103 | ENTC      |
+|      2 | Ankita   |    96 |    102 |     103 | ENTC      |
+|      1 | Pratik   |    95 |    101 |     103 | ENTC      |
+|      5 | Tejas    |    80 |    105 |     104 | CS        |
+|      4 | Ishpreet |    92 |    104 |     104 | CS        |
+|      3 | Rahul    |    80 |    103 |     104 | CS        |
+|      2 | Ankita   |    96 |    102 |     104 | CS        |
+|      1 | Pratik   |    95 |    101 |     104 | CS        |
++--------+----------+-------+--------+---------+-----------+
+25 rows in set (0.00 sec)
+
+mysql> select Rollno,Name from stu where MArks>90;
++--------+----------+
+| Rollno | Name     |
++--------+----------+
+|      1 | Pratik   |
+|      2 | Ankita   |
+|      4 | Ishpreet |
++--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> create view v1 as select Name from stu;
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> select * from v1;
++----------+
+| Name     |
++----------+
+| Pratik   |
+| Ankita   |
+| Rahul    |
+| Ishpreet |
+| Tejas    |
++----------+
+5 rows in set (0.00 sec)
+
+mysql> create view v2 as select Dept_name from dept;
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> select * from v2;
++-----------+
+| Dept_name |
++-----------+
+| IT        |
+| CS        |
+| CIVIL     |
+| ENTC      |
+| CS        |
++-----------+
+5 rows in set (0.00 sec)
+
+mysql> create or replace view v1 as select Rollno,Name from stu;
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> select * from v1;
++--------+----------+
+| Rollno | Name     |
++--------+----------+
+|      1 | Pratik   |
+|      2 | Ankita   |
+|      3 | Rahul    |
+|      4 | Ishpreet |
+|      5 | Tejas    |
++--------+----------+
+5 rows in set (0.00 sec)
+
+mysql> drop view v1;
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> drop view v2;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> 
+
+

@@ -1,0 +1,313 @@
+/*
+Chit No: 3		           			          	 DBMS LAB
+Problem Statement: Design following SQL DML statements:
+Create a university/college database containing following tables-dept,instructor,teaches,student.
+
+dept(ins_id ,deptnm,budget)
+
+instructor(inst_id,deptnm,salary,name,raise)
+
+student(stud_id,deptnm,sem,name,yr,creadits)
+
+teaches(inst_id,course,sem,yr)
+
+a) Insert records into all tables.
+b) Find the avg salary of each department use group by clause.
+c) Find the department that has highest or average salary
+d) Delete the records of all instructors with salary below 2000.
+*/
+
+/*
+b) Find the avg salary of each department use group by clause.
+
+mysql> select avg(salary) avg_salary,dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm;
+
+c) Find the department that has highest or average salary
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having avg(salary) order by avg(salary) desc limit 1;
+
+d) Delete the records of all instructors with salary below 2000.
+
+mysql> delete from instructor where salary<2000;
+*/
+
+
+------------------------------------------------------------------------------------
+
+
+pratik-vm@pratikvm-Virtual-Machine:~$ sudo mysql
+[sudo] password for pratik-vm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 8.0.39-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| T1                 |
+| chit2              |
+| exp_2              |
+| exp_3              |
+| information_schema |
+| joint              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+9 rows in set (0.00 sec)
+
+mysql> create database chit3;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> use chit3;
+Database changed
+mysql> create table dept(ins_id int(5),deptnm varchar(10),budget int(10));
+Query OK, 0 rows affected, 2 warnings (0.41 sec)
+
+mysql> insert into dept values(1,'FE',5000),(2,'SE',4000),(3,'TE',6000),(4,'BE',3000);
+Query OK, 4 rows affected (0.09 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from dept;
++--------+--------+--------+
+| ins_id | deptnm | budget |
++--------+--------+--------+
+|      1 | FE     |   5000 |
+|      2 | SE     |   4000 |
+|      3 | TE     |   6000 |
+|      4 | BE     |   3000 |
++--------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> create table instructor(inst_id int(5),deptnm varchar(10),salary int(10),name varchar(10),raise int(5));
+Query OK, 0 rows affected, 3 warnings (0.32 sec)
+
+mysql> insert into instructor values(1,'FE',1000,'Rahul',100),(2,'SE',1500,'Tejas',50),(3,'TE',3000,'Pratik',200),(4,'BE',4000,'Ishpreet',300);
+Query OK, 4 rows affected (0.08 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from instructor;
++---------+--------+--------+----------+-------+
+| inst_id | deptnm | salary | name     | raise |
++---------+--------+--------+----------+-------+
+|       1 | FE     |   1000 | Rahul    |   100 |
+|       2 | SE     |   1500 | Tejas    |    50 |
+|       3 | TE     |   3000 | Pratik   |   200 |
+|       4 | BE     |   4000 | Ishpreet |   300 |
++---------+--------+--------+----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table student(stud_id int(5),deptnm varchar(10),sem varchar(5),name varchar(5),yr year,creadits int(5));
+Query OK, 0 rows affected, 2 warnings (1.59 sec)
+
+mysql> insert into student values(1,'CS','I','Raj',2025,22);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student values(2,'CS','I','Mohak',2025,19),(3,'IT','I','Sarthak',2025,22),(4,'CIVIL','I','Prasad',2025,22);
+ERROR 1406 (22001): Data too long for column 'name' at row 2
+mysql> insert into student values(2,'CS','I','Mohak',2025,19);
+Query OK, 1 row affected (0.57 sec)
+
+mysql> insert into student values(3,'IT','I','Sarthak',2025,22);
+ERROR 1406 (22001): Data too long for column 'name' at row 1
+mysql> insert into student values(3,'IT','I','Sahil',2025,22);
+Query OK, 1 row affected (0.28 sec)
+
+mysql> insert into student values(4,'CIVIL','I','Prasad',2025,22);
+ERROR 1406 (22001): Data too long for column 'name' at row 1
+mysql> insert into student values(4,'CIVIL','I','Aijay',2025,22);
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select * from student;
++---------+--------+------+-------+------+----------+
+| stud_id | deptnm | sem  | name  | yr   | creadits |
++---------+--------+------+-------+------+----------+
+|       1 | CS     | I    | Raj   | 2025 |       22 |
+|       2 | CS     | I    | Mohak | 2025 |       19 |
+|       3 | IT     | I    | Sahil | 2025 |       22 |
+|       4 | CIVIL  | I    | Aijay | 2025 |       22 |
++---------+--------+------+-------+------+----------+
+4 rows in set (0.00 sec)
+
+mysql> create table teaches(inst_id int(5),course varchar(10),sem varchar(5),yr year);
+Query OK, 0 rows affected, 1 warning (1.45 sec)
+
+mysql> insert into teaches values(1,'M-2','II',2025),(2,'DSA','II',2025),(3,'OOP','III',2025),(4,'SPOS','III',2025);
+Query OK, 4 rows affected (0.14 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from teaches;
++---------+--------+------+------+
+| inst_id | course | sem  | yr   |
++---------+--------+------+------+
+|       1 | M-2    | II   | 2025 |
+|       2 | DSA    | II   | 2025 |
+|       3 | OOP    | III  | 2025 |
+|       4 | SPOS   | III  | 2025 |
++---------+--------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(salary) avg_salary from dept group by deptnm;
+ERROR 1054 (42S22): Unknown column 'salary' in 'field list'
+mysql> select avg(salary) avg_salary from dept join instructor on inst_id=inst_id group by
+deptnm;
+ERROR 1052 (23000): Column 'deptnm' in group statement is ambiguous
+mysql> select avg(salary) from dept join instructor on dept.inst_id=instructor.inst_id grou
+p by deptnm;
+ERROR 1054 (42S22): Unknown column 'dept.inst_id' in 'on clause'
+mysql> select avg(salary) from dept join instructor on dept.ins_id=instructor.inst_id group by deptnm;
+ERROR 1052 (23000): Column 'deptnm' in group statement is ambiguous
+mysql> select avg(salary) from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm;
++-------------+
+| avg(salary) |
++-------------+
+|   1000.0000 |
+|   1500.0000 |
+|   3000.0000 |
+|   4000.0000 |
++-------------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(salary) avg_salary from dept join instructor on dept.ins_id=instructor.in
+st_id group by dept.deptnm;
++------------+
+| avg_salary |
++------------+
+|  1000.0000 |
+|  1500.0000 |
+|  3000.0000 |
+|  4000.0000 |
++------------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(salary) as avg_salary from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm;
++------------+
+| avg_salary |
++------------+
+|  1000.0000 |
+|  1500.0000 |
+|  3000.0000 |
+|  4000.0000 |
++------------+
+4 rows in set (0.00 sec)
+
+mysql> select deptnm from (select avg(salary) from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm);
+ERROR 1248 (42000): Every derived table must have its own alias
+mysql> select deptnm from (select avg(salary) from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm) as avg_salary;
+ERROR 1054 (42S22): Unknown column 'deptnm' in 'field list'
+mysql> select dept.deptnm from (select avg(salary) from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm) as avg_salary;
+ERROR 1054 (42S22): Unknown column 'dept.deptnm' in 'field list'
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group
+ by dept.deptnm;
++--------+
+| deptnm |
++--------+
+| FE     |
+| SE     |
+| TE     |
+| BE     |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having avg(salary);
++--------+
+| deptnm |
++--------+
+| FE     |
+| SE     |
+| TE     |
+| BE     |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having max(salary);
++--------+
+| deptnm |
++--------+
+| FE     |
+| SE     |
+| TE     |
+| BE     |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having max(salary) limit 1;
++--------+
+| deptnm |
++--------+
+| FE     |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having max(salary) order by max(salary) desc limit 1;
++--------+
+| deptnm |
++--------+
+| BE     |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having max(salary) order by max(salary) desc;
++--------+
+| deptnm |
++--------+
+| BE     |
+| TE     |
+| SE     |
+| FE     |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(salary) avg_salary,dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm;
++------------+--------+
+| avg_salary | deptnm |
++------------+--------+
+|  1000.0000 | FE     |
+|  1500.0000 | SE     |
+|  3000.0000 | TE     |
+|  4000.0000 | BE     |
++------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having max(salary) order by avg(salary) desc limit 1;
++--------+
+| deptnm |
++--------+
+| BE     |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select dept.deptnm from dept join instructor on dept.ins_id=instructor.inst_id group by dept.deptnm having avg(salary) order by avg(salary) desc limit 1;
++--------+
+| deptnm |
++--------+
+| BE     |
++--------+
+1 row in set (0.00 sec)
+
+mysql> delete from instructor where salary<2000;
+delete from instructor where salary<2000;
+^C
+mysql> delete from instructor where salary<2000;
+Query OK, 2 rows affected (0.07 sec)
+
+mysql> select * from instructor;
++---------+--------+--------+----------+-------+
+| inst_id | deptnm | salary | name     | raise |
++---------+--------+--------+----------+-------+
+|       3 | TE     |   3000 | Pratik   |   200 |
+|       4 | BE     |   4000 | Ishpreet |   300 |
++---------+--------+--------+----------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+

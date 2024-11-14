@@ -1,0 +1,76 @@
+mong(base) rmdstic@rmdstic-OptiPlex-3010:~$ mongo
+
+> use TE3
+switched to db TE3
+> db.Student1.find()
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c896"), "Name" : "Sanika", "RollN" : 3, "Marks" : 85, "City" : "Pune" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c897"), "Name" : "Pranjali", "RollN" : 22, "Marks" : 87, "City" : "Pune" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c898"), "Name" : "Sakshi", "RollN" : 18, "Marks" : 89, "City" : "Mumbai" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c899"), "Name" : "Ritu", "RollN" : 24, "Marks" : 91, "City" : "Warje" }
+{ "_id" : ObjectId("66fe25ea574331aa48d98ff2"), "Name" : "Vishwa", "RollN" : 3, "Marks" : 80, "City" : "Pune" }
+{ "_id" : ObjectId("66fe2602574331aa48d98ff3"), "Name" : "Shreya", "RollN" : 22, "Marks" : 80, "City" : "Pune" }
+{ "_id" : ObjectId("66fe261d574331aa48d98ff4"), "Name" : "Priti", "RollN" : 18, "Marks" : 80, "City" : "Pune" }
+> db.Student1.mapReduce(function(){emit(this.Name,this.Marks)},function(key,values){return Array.sum(values)},{query:{"RollN":3},out:"final_result"})
+{
+	"result" : "final_result",
+	"timeMillis" : 1286,
+	"counts" : {
+		"input" : 2,
+		"emit" : 2,
+		"reduce" : 0,
+		"output" : 2
+	},
+	"ok" : 1
+}
+> use TE3;
+switched to db TE3
+> db.Student1.find()
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c896"), "Name" : "Sanika", "RollN" : 3, "Marks" : 85, "City" : "Pune" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c897"), "Name" : "Pranjali", "RollN" : 22, "Marks" : 87, "City" : "Pune" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c898"), "Name" : "Sakshi", "RollN" : 18, "Marks" : 89, "City" : "Mumbai" }
+{ "_id" : ObjectId("66fa3c21ff67c19eb259c899"), "Name" : "Ritu", "RollN" : 24, "Marks" : 91, "City" : "Warje" }
+{ "_id" : ObjectId("66fe25ea574331aa48d98ff2"), "Name" : "Vishwa", "RollN" : 3, "Marks" : 80, "City" : "Pune" }
+{ "_id" : ObjectId("66fe2602574331aa48d98ff3"), "Name" : "Shreya", "RollN" : 22, "Marks" : 80, "City" : "Pune" }
+{ "_id" : ObjectId("66fe261d574331aa48d98ff4"), "Name" : "Priti", "RollN" : 18, "Marks" : 80, "City" : "Pune" }
+> var map=function(){ emit(this.,this.rank)};
+2024-10-07T10:02:23.303+0530 E QUERY    [thread1] SyntaxError: missing name after . operator @(shell):1:30
+> var map=function(){ emit(this.Name,this.Marks)};
+> var reduce=function(Name,Marks){ return Array.sum(Marks);};
+> db.Student1.mapReduce(map,reduce,{out :"resultCollection1"});
+{
+	"result" : "resultCollection1",
+	"timeMillis" : 1085,
+	"counts" : {
+		"input" : 7,
+		"emit" : 7,
+		"reduce" : 0,
+		"output" : 7
+	},
+	"ok" : 1
+}
+> var map=function(){ emit(this.Name,this.Marks)};
+> var reduce=function(Name,Marks){ return Array.avg(Marks);};
+> db.Student1.mapReduce(map,reduce,{out :"resultCollection2"});
+{
+	"result" : "resultCollection2",
+	"timeMillis" : 576,
+	"counts" : {
+		"input" : 7,
+		"emit" : 7,
+		"reduce" : 0,
+		"output" : 7
+	},
+	"ok" : 1
+}
+> db.resultCollection2.find()
+{ "_id" : "Pranjali", "value" : 87 }
+{ "_id" : "Priti", "value" : 80 }
+{ "_id" : "Ritu", "value" : 91 }
+{ "_id" : "Sakshi", "value" : 89 }
+{ "_id" : "Sanika", "value" : 85 }
+{ "_id" : "Shreya", "value" : 80 }
+{ "_id" : "Vishwa", "value" : 80 }
+> ^C
+bye
+
+
